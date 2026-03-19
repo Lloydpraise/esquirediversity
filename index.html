@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esquire Diversity LTD | Interior Design & Construction</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+        --off-white: #F9F8F6;
+        --saf-green: #00B53F;
+        --brick-red: #CB4154;
+        --dark-bg: #1A1A1A;
+        --card-white: #FFFFFF;
+        --text-main: #2D2D2D;
+        --text-muted: #666666;
+        --radius-lg: 32px;
+        --radius-md: 24px;
+        --radius-sm: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--off-white);
+        color: var(--text-main);
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* --- Navigation --- */
+    nav {
+        background: var(--card-white);
+        border-radius: 50px;
+        padding: 0.8rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        position: sticky;
+        top: 1rem;
+        z-index: 100;
+    }
+
+    .logo {
+        font-weight: 700;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .logo span {
+        color: var(--saf-green);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: var(--brick-red);
+    }
+
+    .btn-contact {
+        background: var(--saf-green);
+        color: white;
+        padding: 0.8rem 1.8rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+
+    .btn-contact:hover {
+        background: var(--brick-red);
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+        position: relative;
+        height: 550px;
+        border-radius: var(--radius-lg);
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover;
+        display: flex;
+        align-items: flex-end;
+        padding: 3.5rem;
+        margin-bottom: 4rem;
+    }
+
+    .hero-title {
+        color: white;
+        font-size: 3.5rem;
+        font-weight: 500;
+        line-height: 1.1;
+        max-width: 600px;
+        display: block; 
+    }
+
+    .sliding-container {
+        display: inline-block;
+        height: 1.1em; 
+        vertical-align: bottom;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .sliding-wrapper {
+        display: flex;
+        flex-direction: column;
+        animation: infinite-slide 12s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+
+    .sliding-item {
+        display: block;
+        height: 1.1em; 
+        white-space: nowrap;
+        color: white;
+    }
+
+    @keyframes infinite-slide {
+        0%, 15% { transform: translateY(0); }
+        20%, 35% { transform: translateY(-1.1em); }
+        40%, 55% { transform: translateY(-2.2em); }
+        60%, 75% { transform: translateY(-3.3em); }
+        80%, 95% { transform: translateY(-4.4em); }
+        100% { transform: translateY(-5.5em); }
+    }
+
+    .hero-card {
+        position: absolute;
+        right: 3.5rem;
+        bottom: 3.5rem;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        max-width: 380px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        z-index: 10;
+    }
+
+    .btn-outline:hover {
+        background: var(--saf-green);
+        color: white;
+    }
+
+    /* --- Global Section Headers --- */
+    .section-header {
+        font-size: 2.2rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        line-height: 1.2;
+    }
+
+    .section-header span {
+        color: var(--text-muted);
+    }
+
+    /* --- Stats & About Row --- */
+    .about-row {
+        display: grid;
+        grid-template-columns: 1fr 2.2fr;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+        scroll-margin-top: 100px;
+    }
+
+    .stats-card {
+        background: #E8F5E9; 
+        border-radius: var(--radius-md);
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .stats-card h3 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        margin-bottom: 3rem;
+    }
+
+    .stats-grid {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-item h4 {
+        font-size: 2.5rem;
+        color: var(--saf-green); 
+        font-weight: 600;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-item p {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .who-we-are {
+        background: var(--card-white);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .who-we-are-content {
+        padding: 3rem;
+        flex: 1;
+    }
+
+    .who-we-are-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .who-we-are-content p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+   .who-we-are-image {
+    flex: 0.8;
+    height: 100%;
+    min-height: 400px;
+    /* Updated to a high-resolution professional interior/architecture shot */
+    background: url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=2000&auto=format&fit=crop') center/cover;
+    border-radius: 200px 0 0 200px; 
+    margin-left: -20px; 
+}
+
+    /* --- Gallery CTA Section --- */
+    .gallery-cta {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--card-white);
+        border-radius: var(--radius-md);
+        margin-bottom: 5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+    }
+
+    .gallery-cta .section-header {
+        margin: 0 auto 2rem auto;
+    }
+
+    /* --- Process Section --- */
+    .process-container {
+        margin-bottom: 5rem;
+        scroll-margin-top: 100px;
+    }
+
+    .process-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        align-items: center;
+    }
+
+    .process-stack {
+        position: relative;
+        padding-top: 20px; 
+    }
+
+    .stack-bg-1 {
+        position: absolute;
+        top: 0; left: 20px; right: 20px; height: 100px;
+        background: rgba(255,255,255,0.4);
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    .stack-bg-2 {
+        position: absolute;
+        top: 10px; left: 10px; right: 10px; height: 100px;
+        background: rgba(255,255,255,0.7);
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    .process-card {
+        position: relative;
+        background: var(--card-white);
+        padding: 3rem;
+        border-radius: var(--radius-md);
+        z-index: 3;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .process-card .step-number {
+        font-size: 5rem;
+        color: #F0F0F0;
+        font-weight: 600;
+        line-height: 1;
+        margin-bottom: 1rem;
+        transition: color 0.3s;
+    }
+    
+    .process-card:hover .step-number {
+        color: var(--brick-red); 
+    }
+
+    .process-card h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .process-card h3 span {
+        color: var(--text-muted);
+        font-weight: 400;
+    }
+
+    .process-card p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .process-images {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .img-main {
+        height: 350px;
+        border-radius: var(--radius-md);
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* --- Bento Grid (Shared for Services & Why Us) --- */
+    .bento-section {
+        margin-bottom: 5rem;
+        scroll-margin-top: 100px;
+    }
+
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto auto;
+        gap: 1.5rem;
+    }
+
+    .bento-item {
+        background: var(--card-white);
+        border-radius: var(--radius-md);
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        min-height: 250px;
+    }
+
+    .bento-item h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .bento-item p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    /* specific bento backgrounds */
+    .bento-light-1 { background: #EFEBE5; justify-content: space-between; }
+    .bento-light-2 { background: #F4EBE6; justify-content: flex-end; }
+    .bento-dark { background: linear-gradient(145deg, var(--dark-bg), #2A2A2A); color: white; justify-content: flex-end; }
+    .bento-dark p { color: #BBBBBB; }
+    
+    /* Image Background Cards */
+    .bento-img-card {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        color: white;
+        justify-content: flex-end;
+        overflow: hidden;
+    }
+    .bento-img-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 70%);
+        z-index: 1;
+    }
+    .bento-img-card > * { position: relative; z-index: 2; }
+    .bento-img-card p { color: #E0E0E0; }
+
+    .bento-span-2 { grid-column: span 2; }
+
+    .deco-lines {
+        width: 60px;
+        height: 60px;
+        margin-top: 1rem;
+        border-radius: 50%;
+        background: repeating-linear-gradient(45deg, transparent, transparent 5px, var(--saf-green) 5px, var(--saf-green) 8px);
+        opacity: 0.5;
+    }
+
+    /* --- Footer --- */
+    footer {
+        background-color: var(--dark-bg);
+        color: white;
+        padding: 4rem 2rem 2rem 2rem;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        margin-top: 5rem;
+    }
+
+    .footer-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .footer-brand .logo {
+        color: white;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-brand p {
+        color: #999;
+        font-size: 0.9rem;
+        max-width: 300px;
+    }
+
+    .footer-links h4 {
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        color: var(--saf-green);
+    }
+
+    .footer-links ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .footer-links a {
+        color: #CCC;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+        color: var(--brick-red);
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 0 auto;
+        border-top: 1px solid #333;
+        padding-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* --- Responsive Logic --- */
+    @media (max-width: 900px) {
+        .nav-links { display: none; }
+        
+        .hero {
+            height: 65vh;
+            min-height: 500px;
+            padding: 2rem;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: 2.2rem;
+            max-width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        /* The specific Mobile fix for the Hero Card */
+        .hero-card {
+            position: relative;
+            right: auto;
+            bottom: auto;
+            margin: -4rem auto 3rem auto; /* Creates the overlap */
+            width: 90%;
+            max-width: none;
+            text-align: center;
+        }
+
+        .about-row, .process-row, .bento-grid, .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .who-we-are { flex-direction: column; }
+        .who-we-are-image {
+            width: 100%;
+            min-height: 250px;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            margin-left: 0;
+        }
+
+        .bento-span-2 { grid-column: span 1; }
+        .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+    /* --- Visibility Logic --- */
+.hide-desktop { display: none !important; }
+
+/* Desktop Card stays exactly where it was */
+.hero-card.hide-mobile {
+    position: absolute;
+    right: 3.5rem;
+    bottom: 3.5rem;
+    z-index: 10;
+}
+
+/* --- Mobile Logic --- */
+@media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+    .hide-desktop { display: block !important; }
+
+    .hero-card.mobile-only {
+        position: relative;
+        margin: -3rem auto 2rem auto; /* -3rem makes it 'touch' and overlap the hero */
+        width: 92%;
+        max-width: 450px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        z-index: 20;
+        /* Reset any desktop positioning */
+        right: auto;
+        bottom: auto;
+    }
+    
+    .hero {
+        margin-bottom: 0; /* Ensures the card touches the image */
+    }
+}
+
+/* --- Ensuring the Brick Red is consistent --- */
+.btn-brick {
+    display: block;
+    background: transparent;
+    border: 2px solid var(--saf-green);
+    color: var(--saf-green) !important;
+    padding: 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    text-align: center;
+    transition: background 0.25s, color 0.25s;
+}
+</style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOMContentLoaded (script 1)');
+    // 1. INITIALIZE SUPABASE
+    const SUPABASE_URL = 'https://xgtnbxdxbbywvzrttixf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhndG5ieGR4YmJ5d3Z6cnR0aXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0Nzg5NTAsImV4cCI6MjA3MjA1NDk1MH0.YGk0vFyIJEiSpu5phzV04Mh4lrHBlfYLFtPP_afFtMQ';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // 2. MODAL LOGIC
+    const modal = document.getElementById('leadModal');
+    function openModal() { console.log('openModal() called (script 1), modal:', modal); if (modal) modal.style.display = 'flex'; }
+    function closeModal() { console.log('closeModal() called (script 1), modal:', modal); if (modal) modal.style.display = 'none'; }
+    window.openModal = openModal; window.closeModal = closeModal;
+
+    // Close modal if user clicks outside the card
+    if (modal) {
+        window.addEventListener('click', function(event) { if (event.target === modal) closeModal(); });
+    }
+
+    // 3. FORM SUBMISSION
+    const leadForm = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (leadForm) {
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!supabase) { alert('Submission disabled: Supabase not configured.'); return; }
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Sending...';
+
+            const leadData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                site_location: document.getElementById('location').value,
+                service_needed: document.getElementById('service').value
+            };
+
+            try {
+                const { data, error } = await supabase.from('esquireleads').insert([leadData]);
+                if (error) throw error;
+                alert('Request received! We will call you soon.');
+                leadForm.reset();
+                closeModal();
+            } catch (err) {
+                console.error(err);
+                alert('Error sending request. Please try again.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Send Request';
+        });
+    }
+
+    // 4. ATTACH TO BUTTONS
+    // Ensure header and both hero CTA buttons open the modal
+    document.querySelectorAll('a[href*="#contact"], .btn-contact, .btn-outline, .btn-brick, .btn-green').forEach(button => {
+        button.addEventListener('click', (e) => { console.log('button clicked (script 1):', button); e.preventDefault(); openModal(); });
+    });
+    // Explicitly attach to the header and hero buttons (IDs added to HTML)
+    const headerBtn = document.getElementById('headerLeadBtn');
+    const heroBtn = document.getElementById('heroLeadBtn');
+    const heroBtnMobile = document.getElementById('heroLeadBtnMobile');
+    if (headerBtn) headerBtn.addEventListener('click', (e) => { console.log('headerLeadBtn clicked (script 1)'); e.preventDefault(); openModal(); });
+    if (heroBtn) heroBtn.addEventListener('click', (e) => { console.log('heroLeadBtn clicked (script 1)'); e.preventDefault(); openModal(); });
+    if (heroBtnMobile) heroBtnMobile.addEventListener('click', (e) => { console.log('heroLeadBtnMobile clicked (script 1)'); e.preventDefault(); openModal(); });
+});
+</script>
+<body>
+
+<div class="container">
+    
+    <nav>
+        <div class="logo">Esquire<span>Diversity</span>LTD</div>
+        <ul class="nav-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#process">Our Process</a></li>
+            <li><a href="gallery.html">Our Work</a></li>
+        </ul>
+        <a id="headerLeadBtn" class="btn-contact" role="button" tabindex="0" onclick="openModal(); return false;">Book a Free Call</a>
+    </nav>
+
+    <div class="hero">
+    <h1 class="hero-title">
+        Modernize & Diversify Your
+        <div class="sliding-container">
+            <div class="sliding-wrapper">
+                <span class="sliding-item">Kitchen Space...</span>
+                <span class="sliding-item">Office Space...</span>
+                <span class="sliding-item">New House...</span>
+                <span class="sliding-item">Ceiling...</span>
+                <span class="sliding-item">Floors...</span>
+                <span class="sliding-item">Kitchen Space...</span>
+            </div>
+        </div>
+    </h1>
+
+    <div class="hero-card hide-mobile">
+        <p>Have a Vision? We have the skills and expertise! <br><strong>Lets work Together!</strong></p>
+        <a id="heroLeadBtn" class="btn-brick" role="button" tabindex="0" onclick="openModal(); return false;">Free Consultation</a>
+    </div>
+</div>
+
+<div class="hero-card mobile-only hide-desktop">
+    <p>Have a Vision? We have the skills and expertise! <br><strong>Lets work Together!</strong></p>
+    <a id="heroLeadBtnMobile" class="btn-brick" role="button" tabindex="0" onclick="openModal(); return false;">Free Consultation</a>
+</div>
+
+<div class="about-row" id="about">
+        <div class="stats-card">
+            <h3>Our Company<br>In Numbers</h3>
+            <div class="deco-lines" style="position: absolute; top: 2rem; right: 2rem; background: repeating-linear-gradient(45deg, transparent, transparent 5px, var(--brick-red) 5px, var(--brick-red) 8px); opacity: 0.2;"></div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>100+</h4>
+                    <p>Customers Served</p>
+                </div>
+                <div class="stat-item">
+                    <h4>15+</h4>
+                    <p>Years of Industry<br>Experience</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="who-we-are">
+            <div class="who-we-are-content">
+                <h2>Who We Are</h2>
+                <p>At Esquire Diversity LTD, we understand the challenges of creating exceptional spaces that blend elegance, quality, and functionality.</p>
+                <p>As the premier design and construction provider, we've made it our mission to simplify the building process, ensuring that every project is executed flawlessly from initial consultation to final handover.</p>
+            </div>
+            <div class="who-we-are-image"></div>
+        </div>
+    </div>
+
+    <div class="gallery-cta">
+        <h2 class="section-header">We don't want to tell you - let's show You<br><span>How we transform Spaces</span></h2>
+        <a href="gallery.html" class="btn-contact" style="background: var(--brick-red); padding: 1rem 2.5rem; font-size: 1.1rem; display: inline-block; margin-top: 1rem;">View Our Gallery</a>
+    </div>
+
+    <div class="bento-section" id="services">
+        <h2 class="section-header">Services <span>Offered</span></h2>
+        <div class="bento-grid">
+            
+            <div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+                <h4>Lighting & Ceilings</h4>
+                <p>Illuminating spaces with modern, energy-efficient designs.</p>
+            </div>
+            
+            <div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+                <h4>Floors & Landscapes</h4>
+                <p>Seamless transitions from beautiful interiors to stunning exteriors.</p>
+            </div>
+            
+            <div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+                <h4>Office & Commercial</h4>
+                <p>Professional environments built for productivity and brand identity.</p>
+            </div>
+
+            <div class="bento-item bento-img-card bento-span-2" style="background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                <h4>New & Full Constructions</h4>
+                <p>Ground-up development and complete structural overhauls managed by expert teams to ensure safety, durability, and architectural excellence.</p>
+            </div>
+
+            <div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+                <h4>Kitchen & Cabinetry</h4>
+                <p>Bespoke fittings and modern culinary spaces.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="process-container" id="process">
+        <h2 class="section-header">How We <span>Elevate</span> Your<br>Spaces</h2>
+        
+        <div class="process-row">
+            <div class="process-stack">
+                <div class="stack-bg-1"></div>
+                <div class="stack-bg-2"></div>
+                <div class="process-card">
+                    <div class="step-number">1</div>
+                    <h3>Consultation &<br><span>Design Architecture</span></h3>
+                    <p>Every great space begins with a conversation. We work closely with you to understand your lifestyle, aesthetic preferences, and practical needs, translating them into detailed 3D models and actionable blueprints.</p>
+                </div>
+            </div>
+            <div class="process-images">
+                <div class="img-main" style="background-image: url('https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            </div>
+        </div>
+
+        <div class="process-row">
+            <div class="process-stack">
+                <div class="stack-bg-1"></div>
+                <div class="stack-bg-2"></div>
+                <div class="process-card">
+                    <div class="step-number">2</div>
+                    <h3>Execution &<br><span>Final Handover</span></h3>
+                    <p>Our commitment to your satisfaction extends beyond the design phase. We manage the construction, finishing, and final walkthroughs to ensure every detail matches the vision before handing over the keys.</p>
+                </div>
+            </div>
+            <div class="process-images">
+                <div class="img-main" style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-section">
+    <h2 class="section-header">Why <span>Choose</span> Esquire Diversity</h2>
+    <div class="bento-grid">
+        
+        <div class="bento-item bento-light-1">
+            <div style="margin-bottom: 2rem;">
+                <h4>End-to-End Solutions</h4>
+                <p>We manage every aspect of your construction and furnishing project, saving you time and resources.</p>
+            </div>
+            <div class="deco-lines"></div>
+        </div>
+        
+        <div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+    <h4>After-Sales Support</h4>
+    <p>We are committed to providing ongoing support & after-sales service to address any future needs or concerns.</p>
+</div>
+
+<div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+    <h4>No Variety<br>Restrictions</h4>
+    <p>We partner with any vendor meeting our quality standards, providing the broadest selection of materials and furniture solutions.</p>
+</div>
+
+<div class="bento-item bento-img-card bento-span-2" style="background-image: url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+    <h4>Superior Quality</h4>
+    <p>Our partnerships with the best suppliers grant us access to the finest materials, craftsmanship, and quality control processes.</p>
+</div>
+
+<div class="bento-item bento-img-card" style="background-image: url('https://images.unsplash.com/photo-1604578762246-4113564caa42?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');">
+    <h4>Bespoke Finishings</h4>
+    <p>We specialize in sourcing custom-made pieces that perfectly match your unique vision and requirements.</p>
+</div>
+
+    </div>
+</div>
+</div>
+
+<footer id="contact">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="logo">Esquire<span>Diversity</span>LTD</div>
+            <p>Modernizing and diversifying interior spaces and constructions across Kenya. We build environments that inspire.</p>
+        </div>
+        
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#services">Our Services</a></li>
+                <li><a href="gallery.html">Project Gallery</a></li>
+                <li><a href="#process">How We Work</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-links">
+            <h4>Contact Us</h4>
+            <ul>
+                <li><a href="tel:+254700000000">+254 700 000 000</a></li>
+                <li><a href="mailto:info@esquirediversity.co.ke">info@esquirediversity.co.ke</a></li>
+                <li><span style="color: #CCC;">[Insert Office Location/Building Here], Nairobi, Kenya</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2024 Esquire Diversity LTD. All Rights Reserved.</p>
+        <p>Designed for Excellence.</p>
+    </div>
+</footer>
+<div id="leadModal" class="modal-overlay">
+    <div class="modal-card">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div class="modal-header">
+            <h2>Start Your <span>Project</span></h2>
+            <p>Fill in the details below, and our team will get back to you within 24 hours.</p>
+        </div>
+        
+        <form id="leadForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="+254..." required>
+            </div>
+            <div class="form-group">
+                <label>Site Location</label>
+                <input type="text" id="location" placeholder="e.g. Kilimani, Nairobi" required>
+            </div>
+            <div class="form-group">
+                <label>Service Needed</label>
+                <input type="text" id="service" placeholder="e.g. Gypsum Ceiling, Kitchen Reno" required>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">Send Request</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 1.5rem;
+    }
+
+    .modal-card {
+        background: var(--card-white);
+        width: 100%;
+        max-width: 500px;
+        padding: 3rem;
+        border-radius: var(--radius-lg);
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlide {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: #f0f0f0;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+    }
+
+    .close-btn:hover { background: var(--brick-red); color: white; }
+
+    .modal-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .modal-header h2 span { color: var(--saf-green); }
+    .modal-header p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); }
+    
+    .form-group input {
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid #E0E0E0;
+        background: #FDFDFD;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus { outline: none; border-color: var(--saf-green); }
+
+    .btn-submit {
+        width: 100%;
+        background: var(--saf-green);
+        color: white;
+        padding: 1rem;
+        border-radius: 50px;
+        border: none;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.3s;
+        margin-top: 1rem;
+    }
+
+    .btn-submit:hover { background: #008f32; transform: translateY(-2px); }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* --- Luxury WhatsApp Widget --- */
+.whatsapp-float {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    background-color: var(--saf-green);
+    color: white;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 181, 63, 0.35); /* Soft, deep glow */
+    z-index: 1000; /* Stays above everything */
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy, premium transition */
+}
+
+.whatsapp-icon {
+    width: 35px;
+    height: 35px;
+    fill: currentColor;
+}
+
+/* The Hover Effect */
+.whatsapp-float:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 181, 63, 0.5);
+}
+
+/* The "Chat with us" Tooltip (Desktop Only) */
+.whatsapp-float::before {
+    content: "Chat with us!";
+    position: absolute;
+    right: 80px;
+    background: var(--card-white);
+    color: var(--text-main);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(10px) translateY(2px);
+    white-space: nowrap;
+}
+
+.whatsapp-float:hover::before {
+    opacity: 1;
+    transform: translateX(0) translateY(2px);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        bottom: 25px;
+        right: 25px;
+        width: 55px;
+        height: 55px;
+    }
+    .whatsapp-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .whatsapp-float::before {
+        display: none; /* Hide the tooltip on mobile to avoid cluttering the screen */
+    }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Supabase keys - replace with your project values
+    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    if (SUPABASE_URL.includes('YOUR_') || SUPABASE_ANON_KEY.includes('YOUR_')) {
+        console.warn('Supabase keys not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in the script.');
+    }
+
+    // Initialize supabase client (from CDN)
+    const supabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    // Modal elements and helpers
+    const modal = document.getElementById('leadModal');
+    function openModal() { if (modal) modal.style.display = 'flex'; }
+    function closeModal() { if (modal) modal.style.display = 'none'; }
+    // expose for inline handlers (existing close button uses onclick)
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+
+    // Close modal when clicking outside the card
+    window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // Attach open handlers to relevant buttons
+    document.querySelectorAll('.btn-contact, .btn-outline, .btn-brick, .btn-green').forEach(btn => {
+        btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    });
+
+    // Form handling
+    const leadForm = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (leadForm) {
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!supabaseClient || SUPABASE_URL.includes('YOUR_')) {
+                alert('Submission disabled: Supabase not configured.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Sending...';
+
+            const leadData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                site_location: document.getElementById('location').value,
+                service_needed: document.getElementById('service').value
+            };
+
+            try {
+                const { data, error } = await supabaseClient.from('esquireleads').insert([leadData]);
+                if (error) {
+                    console.error('Supabase insert error:', error);
+                    alert('Error sending request. Please try again.');
+                } else {
+                    alert('Request received! We will call you soon.');
+                    leadForm.reset();
+                    closeModal();
+                }
+            } catch (err) {
+                console.error('Submission failed:', err);
+                alert('Error sending request. Please try again.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Send Request';
+        });
+    }
+
+    // Optional quick connectivity check (will log result)
+    (async function testSupabase() {
+        if (!supabaseClient || SUPABASE_URL.includes('YOUR_')) return;
+        try {
+            const { data, error } = await supabaseClient.from('esquireleads').select('id').limit(1);
+            if (error) console.warn('Supabase test query returned error:', error.message || error);
+            else console.log('Supabase reachable. Sample rows:', data);
+        } catch (err) {
+            console.error('Supabase connectivity check failed:', err);
+        }
+    })();
+});
+</script>
+<a href="https://wa.me/254700000000?text=Hello%20Esquire%20Diversity!%20I%20would%20like%20to%20discuss%20a%20project." 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   aria-label="Chat with us on WhatsApp">
+    <svg class="whatsapp-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.88
