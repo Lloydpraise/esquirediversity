@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <title>Esquire Diversity LTD | Interior Design & Construction</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -593,16 +594,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOMContentLoaded (script 1)');
     // 1. INITIALIZE SUPABASE
     const SUPABASE_URL = 'https://xgtnbxdxbbywvzrttixf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhndG5ieGR4YmJ5d3Z6cnR0aXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0Nzg5NTAsImV4cCI6MjA3MjA1NDk1MH0.YGk0vFyIJEiSpu5phzV04Mh4lrHBlfYLFtPP_afFtMQ';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     // 2. MODAL LOGIC
     const modal = document.getElementById('leadModal');
-    function openModal() { console.log('openModal() called (script 1), modal:', modal); if (modal) modal.style.display = 'flex'; }
-    function closeModal() { console.log('closeModal() called (script 1), modal:', modal); if (modal) modal.style.display = 'none'; }
+    function openModal() { if (modal) modal.style.display = 'flex'; }
+    function closeModal() { if (modal) modal.style.display = 'none'; }
     window.openModal = openModal; window.closeModal = closeModal;
 
     // Close modal if user clicks outside the card
@@ -617,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (leadForm) {
         leadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!supabase) { alert('Submission disabled: Supabase not configured.'); return; }
+            if (!supabaseClient) { alert('Submission disabled: Supabase not configured.'); return; }
             submitBtn.disabled = true;
             submitBtn.innerText = 'Sending...';
 
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             try {
-                const { data, error } = await supabase.from('esquireleads').insert([leadData]);
+                const { data, error } = await supabaseClient.from('esquireleads').insert([leadData]);
                 if (error) throw error;
                 alert('Request received! We will call you soon.');
                 leadForm.reset();
@@ -647,15 +647,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // 4. ATTACH TO BUTTONS
     // Ensure header and both hero CTA buttons open the modal
     document.querySelectorAll('a[href*="#contact"], .btn-contact, .btn-outline, .btn-brick, .btn-green').forEach(button => {
-        button.addEventListener('click', (e) => { console.log('button clicked (script 1):', button); e.preventDefault(); openModal(); });
+        button.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
     });
     // Explicitly attach to the header and hero buttons (IDs added to HTML)
     const headerBtn = document.getElementById('headerLeadBtn');
     const heroBtn = document.getElementById('heroLeadBtn');
     const heroBtnMobile = document.getElementById('heroLeadBtnMobile');
-    if (headerBtn) headerBtn.addEventListener('click', (e) => { console.log('headerLeadBtn clicked (script 1)'); e.preventDefault(); openModal(); });
-    if (heroBtn) heroBtn.addEventListener('click', (e) => { console.log('heroLeadBtn clicked (script 1)'); e.preventDefault(); openModal(); });
-    if (heroBtnMobile) heroBtnMobile.addEventListener('click', (e) => { console.log('heroLeadBtnMobile clicked (script 1)'); e.preventDefault(); openModal(); });
+    if (headerBtn) headerBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    if (heroBtn) heroBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    if (heroBtnMobile) heroBtnMobile.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
 });
 </script>
 <body>
@@ -978,87 +978,85 @@ document.addEventListener('DOMContentLoaded', function () {
     .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
 
     /* --- Luxury WhatsApp Widget --- */
-.whatsapp-float {
-    position: fixed;
-    bottom: 35px;
-    right: 35px;
-    background-color: var(--saf-green);
-    color: white;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 10px 25px rgba(0, 181, 63, 0.35); /* Soft, deep glow */
-    z-index: 1000; /* Stays above everything */
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy, premium transition */
-}
-
-.whatsapp-icon {
-    width: 35px;
-    height: 35px;
-    fill: currentColor;
-}
-
-/* The Hover Effect */
-.whatsapp-float:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(0, 181, 63, 0.5);
-}
-
-/* The "Chat with us" Tooltip (Desktop Only) */
-.whatsapp-float::before {
-    content: "Chat with us!";
-    position: absolute;
-    right: 80px;
-    background: var(--card-white);
-    color: var(--text-main);
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateX(10px) translateY(2px);
-    white-space: nowrap;
-}
-
-.whatsapp-float:hover::before {
-    opacity: 1;
-    transform: translateX(0) translateY(2px);
-}
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
     .whatsapp-float {
-        bottom: 25px;
-        right: 25px;
-        width: 55px;
-        height: 55px;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--saf-green);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        z-index: 9999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
+
+    .whatsapp-float i {
+        font-size: 22px;
+        color: white;
+    }
+
     .whatsapp-icon {
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        height: 35px;
+        fill: currentColor;
     }
+
+    /* The Hover Effect */
+    .whatsapp-float:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(0, 181, 63, 0.5);
+    }
+
+    /* The "Chat with us" Tooltip (Desktop Only) */
     .whatsapp-float::before {
-        display: none; /* Hide the tooltip on mobile to avoid cluttering the screen */
+        content: "Chat with us!";
+        position: absolute;
+        right: 80px;
+        background: var(--card-white);
+        color: var(--text-main);
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: translateX(10px) translateY(2px);
+        white-space: nowrap;
     }
-}
+
+    .whatsapp-float:hover::before {
+        opacity: 1;
+        transform: translateX(0) translateY(2px);
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+        .whatsapp-float {
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+        }
+        .whatsapp-icon {
+            width: 30px;
+            height: 30px;
+        }
+        .whatsapp-float::before {
+            display: none; /* Hide the tooltip on mobile to avoid cluttering the screen */
+        }
+    }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Supabase keys - replace with your project values
-    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-    if (SUPABASE_URL.includes('YOUR_') || SUPABASE_ANON_KEY.includes('YOUR_')) {
-        console.warn('Supabase keys not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in the script.');
-    }
+    const SUPABASE_URL = 'https://xgtnbxdxbbywvzrttixf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhndG5ieGR4YmJ5d3Z6cnR0aXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0Nzg5NTAsImV4cCI6MjA3MjA1NDk1MH0.YGk0vFyIJEiSpu5phzV04Mh4lrHBlfYLFtPP_afFtMQ';
 
     // Initialize supabase client (from CDN)
     const supabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -1087,7 +1085,7 @@ document.addEventListener('DOMContentLoaded', () => {
         leadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!supabaseClient || SUPABASE_URL.includes('YOUR_')) {
+            if (!supabaseClient) {
                 alert('Submission disabled: Supabase not configured.');
                 return;
             }
@@ -1121,18 +1119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerText = 'Send Request';
         });
     }
-
-    // Optional quick connectivity check (will log result)
-    (async function testSupabase() {
-        if (!supabaseClient || SUPABASE_URL.includes('YOUR_')) return;
-        try {
-            const { data, error } = await supabaseClient.from('esquireleads').select('id').limit(1);
-            if (error) console.warn('Supabase test query returned error:', error.message || error);
-            else console.log('Supabase reachable. Sample rows:', data);
-        } catch (err) {
-            console.error('Supabase connectivity check failed:', err);
-        }
-    })();
 });
 </script>
 <a href="https://wa.me/254700000000?text=Hello%20Esquire%20Diversity!%20I%20would%20like%20to%20discuss%20a%20project." 
@@ -1140,5 +1126,10 @@ document.addEventListener('DOMContentLoaded', () => {
    target="_blank" 
    rel="noopener noreferrer"
    aria-label="Chat with us on WhatsApp">
-    <svg class="whatsapp-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.88
+    
+    <i class="fa-brands fa-whatsapp"></i>
+
+</a>
+
+</body>
+</html>
