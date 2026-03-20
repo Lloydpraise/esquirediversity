@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <title>Our Work | Esquire Diversity LTD</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -192,10 +193,72 @@
         .wide, .tall { grid-column: span 1; grid-row: span 1; }
         .mini-footer { flex-direction: column; gap: 1.5rem; text-align: center; }
         .footer-contact { flex-direction: column; gap: 0.5rem; }
+        /* show mobile topbar and make hero edge-to-edge */
+        .mobile-topbar.hide-desktop { display: flex !important; }
+        .mobile-topbar { display: none; position: fixed; left:0; right:0; top:6px; height:48px; background: var(--card-white); padding: 0 1rem; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); z-index:9999; display:flex; align-items:center; justify-content:space-between; transition: transform 180ms ease, top 180ms ease; }
+        .mobile-topbar .mobile-btn { white-space: nowrap; padding: 0.45rem 0.85rem; font-size: 0.95rem; border-radius: 999px; }
+        .mobile-topbar.lift { transform: translateY(-6px); }
+        .mobile-topbar.stuck { top: 0; transform: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        .gallery-hero { width: calc(100% + 3rem); margin-left: -1.5rem; margin-right: -1.5rem; border-radius: 12px; padding: 1rem; height: 42vh; min-height: 210px; }
+        /* hide the desktop nav so mobile topbar is primary */
+        nav { display: none !important; }
+    }
+
+    /* WhatsApp float (match index.html) */
+    .whatsapp-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--saf-green);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        z-index: 9999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .whatsapp-float i { font-size: 22px; color: white; }
+    .whatsapp-float::before {
+        content: "Chat with us!";
+        position: absolute;
+        right: 80px;
+        background: var(--card-white);
+        color: var(--text-main);
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: translateX(10px) translateY(2px);
+        white-space: nowrap;
+    }
+    .whatsapp-float:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(0,181,63,0.5); }
+    .whatsapp-float:hover::before { opacity: 1; transform: translateX(0) translateY(2px); }
+
+    @media (max-width: 768px) {
+        .whatsapp-float { bottom: 25px; right: 25px; width: 55px; height: 55px; }
+        .whatsapp-float i { font-size: 20px; }
+        .whatsapp-float::before { display: none; }
     }
 </style>
 </head>
 <body>
+<!-- Mobile-only slim header (hidden on desktop) -->
+<div id="mobileTopbar" class="mobile-topbar hide-desktop" role="navigation" aria-label="Mobile topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div class="logo" style="font-size:1rem; font-weight:700; white-space:nowrap;">Esquire<span>Diversity</span>LTD</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+        <a id="mobileBookBtn" class="btn-brick mobile-btn" href="#contact" role="button">Book Call</a>
+    </div>
+</div>
 
 <div class="container">
     <nav>
@@ -308,8 +371,8 @@
         <a href="index.html" class="logo">Esquire<span>Diversity</span>LTD</a>
         <div class="footer-contact">
             <a href="mailto:info@esquirediversity.co.ke">info@esquirediversity.co.ke</a>
-            <a href="tel:+254700000000">+254 700 000 000</a>
-            <a href="#">Nairobi, Kenya</a>
+            <a href="tel:+254722326329">0722 326329</a>
+            <a href="#">Mumias Road, Nairobi, Kenya, 00200</a>
         </div>
         <p style="font-size: 0.8rem; color: #999;">&copy; 2026 Esquire Diversity</p>
     </footer>
@@ -346,7 +409,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+<a href="https://wa.me/254722326329?text=Hello%20Esquire%20Diversity!%20I%20would%20like%20to%20discuss%20a%20project." 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   aria-label="Chat with us on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Modal helpers (simple show/hide)
+    const modal = document.getElementById('leadModal');
+    window.openModal = function(){ if (modal) modal.style.display = 'flex'; };
+    window.closeModal = function(){ if (modal) modal.style.display = 'none'; };
+
+    // Mobile topbar behavior: lift then stick
+    const mobileTop = document.getElementById('mobileTopbar');
+    if (mobileTop) {
+        let lifted = false; let stuck = false;
+        window.addEventListener('scroll', function(){
+            const y = window.scrollY || window.pageYOffset;
+            if (y > 10 && !lifted) { mobileTop.classList.add('lift'); lifted = true; }
+            if (y <= 10 && lifted) { mobileTop.classList.remove('lift'); lifted = false; }
+            if (y > 60 && !stuck) { mobileTop.classList.add('stuck'); stuck = true; }
+            if (y <= 60 && stuck) { mobileTop.classList.remove('stuck'); stuck = false; }
+        }, { passive: true });
+        const mobBtn = document.getElementById('mobileBookBtn');
+        if (mobBtn) mobBtn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+    }
+});
+</script>
 </body>
 </html>
 <!-- Lead Modal (same as index) -->

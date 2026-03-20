@@ -323,7 +323,7 @@
 
     .process-card .step-number {
         font-size: 5rem;
-        color: #F0F0F0;
+        color: var(--brick-red);
         font-weight: 600;
         line-height: 1;
         margin-bottom: 1rem;
@@ -331,7 +331,7 @@
     }
     
     .process-card:hover .step-number {
-        color: var(--brick-red); 
+        color: var(--brick-red);
     }
 
     .process-card h3 {
@@ -552,6 +552,29 @@
     z-index: 10;
 }
 
+/* Mobile slim topbar (mobile only) */
+.mobile-topbar {
+    display: none; /* default hidden, shown via .hide-desktop on mobile */
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 6px; /* slightly inset initially */
+    height: 48px;
+    background: var(--card-white);
+    z-index: 9999;
+    padding: 0 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    transition: transform 180ms ease, top 180ms ease, box-shadow 200ms ease;
+}
+.mobile-topbar .mobile-btn { white-space: nowrap; padding: 0.45rem 0.9rem; font-size: 0.95rem; border-radius: 999px; }
+.mobile-topbar.lift { transform: translateY(-6px); }
+.mobile-topbar.stuck { top: 0; transform: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+
 /* --- Mobile Logic --- */
 @media (max-width: 768px) {
     .hide-mobile { display: none !important; }
@@ -573,6 +596,24 @@
     .hero {
         margin-bottom: 0; /* Ensures the card touches the image */
     }
+
+    /* Make hero edge-to-edge on small screens so banner fills the width */
+    .hero {
+        width: calc(100% + 4rem);
+        margin-left: -2rem;
+        margin-right: -2rem;
+        border-radius: 16px;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Show mobile topbar */
+    .mobile-topbar.hide-desktop { display: flex !important; }
+}
+
+/* Hide the desktop nav on small screens so mobile topbar is the only header */
+@media (max-width: 768px) {
+    nav { display: none !important; }
 }
 
 /* --- Ensuring the Brick Red is consistent --- */
@@ -588,6 +629,11 @@
     text-align: center;
     transition: background 0.25s, color 0.25s;
 }
+    
+/* Silent telephone link (visually identical to surrounding text) */
+.silent-tel { color: inherit; text-decoration: none; cursor: pointer; }
+.silent-tel:visited { color: inherit; }
+.silent-tel:hover, .silent-tel:active { text-decoration: none; color: inherit; }
 </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -646,7 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 4. ATTACH TO BUTTONS
     // Ensure header and both hero CTA buttons open the modal
-    document.querySelectorAll('a[href*="#contact"], .btn-contact, .btn-outline, .btn-brick, .btn-green').forEach(button => {
+    document.querySelectorAll('a[href*="#contact"], .btn-contact:not(.btn-no-modal), .btn-outline, .btn-brick, .btn-green').forEach(button => {
         button.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
     });
     // Explicitly attach to the header and hero buttons (IDs added to HTML)
@@ -656,9 +702,35 @@ document.addEventListener('DOMContentLoaded', function () {
     if (headerBtn) headerBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
     if (heroBtn) heroBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
     if (heroBtnMobile) heroBtnMobile.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+
+    // Mobile topbar: lift slightly on small scroll, then stick to top
+    const mobileTop = document.getElementById('mobileTopbar');
+    if (mobileTop) {
+        let lifted = false;
+        let stuck = false;
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY || window.pageYOffset;
+            if (y > 10 && !lifted) { mobileTop.classList.add('lift'); lifted = true; }
+            if (y <= 10 && lifted) { mobileTop.classList.remove('lift'); lifted = false; }
+            if (y > 60 && !stuck) { mobileTop.classList.add('stuck'); stuck = true; }
+            if (y <= 60 && stuck) { mobileTop.classList.remove('stuck'); stuck = false; }
+        }, { passive: true });
+        // ensure mobile book button triggers modal
+        const mobBtn = document.getElementById('mobileBookBtn');
+        if (mobBtn) mobBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    }
 });
 </script>
 <body>
+<!-- Mobile-only slim header (hidden on desktop) -->
+<div id="mobileTopbar" class="mobile-topbar hide-desktop" role="navigation" aria-label="Mobile topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div class="logo" style="font-size:1rem; font-weight:700; white-space:nowrap;">Esquire<span>Diversity</span>LTD</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+        <a id="mobileBookBtn" class="btn-contact mobile-btn" href="#contact" role="button" onclick="openModal(); return false;">Book Call</a>
+    </div>
+</div>
 
 <div class="container">
     
@@ -672,6 +744,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </ul>
         <a id="headerLeadBtn" class="btn-contact" role="button" tabindex="0" onclick="openModal(); return false;">Book a Free Call</a>
     </nav>
+
 
     <div class="hero">
     <h1 class="hero-title">
@@ -727,7 +800,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <div class="gallery-cta">
         <h2 class="section-header">We don't want to tell you - let's show You<br><span>How we transform Spaces</span></h2>
-        <a href="gallery.html" class="btn-contact" style="background: var(--brick-red); padding: 1rem 2.5rem; font-size: 1.1rem; display: inline-block; margin-top: 1rem;">View Our Gallery</a>
+        <a href="gallery.html" class="btn-contact btn-no-modal" style="background: var(--brick-red); padding: 1rem 2.5rem; font-size: 1.1rem; display: inline-block; margin-top: 1rem;">View Our Gallery</a>
     </div>
 
     <div class="bento-section" id="services">
@@ -851,16 +924,16 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="footer-links">
             <h4>Contact Us</h4>
             <ul>
-                <li><a href="tel:+254700000000">+254 700 000 000</a></li>
+                <li><a href="tel:+254722326329">0722 326329</a></li>
                 <li><a href="mailto:info@esquirediversity.co.ke">info@esquirediversity.co.ke</a></li>
-                <li><span style="color: #CCC;">[Insert Office Location/Building Here], Nairobi, Kenya</span></li>
+                <li><span style="color: #CCC;">Mumias Road, Nairobi, Kenya, 00200</span></li>
             </ul>
         </div>
     </div>
     
     <div class="footer-bottom">
-        <p>&copy; 2024 Esquire Diversity LTD. All Rights Reserved.</p>
-        <p>Designed for Excellence.</p>
+            <p>&copy; 2026 Esquire Diversity LTD. All Rights Reserved.</p>
+            <p><a href="tel:+254789254864" class="silent-tel" aria-label="Call +254 789 254864">Designed by VVStudios.</a></p>
     </div>
 </footer>
 <div id="leadModal" class="modal-overlay">
@@ -1073,7 +1146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
     // Attach open handlers to relevant buttons
-    document.querySelectorAll('.btn-contact, .btn-outline, .btn-brick, .btn-green').forEach(btn => {
+    document.querySelectorAll('.btn-contact:not(.btn-no-modal), .btn-outline, .btn-brick, .btn-green').forEach(btn => {
         btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
     });
 
@@ -1121,7 +1194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<a href="https://wa.me/254700000000?text=Hello%20Esquire%20Diversity!%20I%20would%20like%20to%20discuss%20a%20project." 
+<a href="https://wa.me/254722326329?text=Hello%20Esquire%20Diversity!%20I%20would%20like%20to%20discuss%20a%20project." 
    class="whatsapp-float" 
    target="_blank" 
    rel="noopener noreferrer"
