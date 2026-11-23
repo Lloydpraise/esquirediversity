@@ -1,0 +1,17 @@
+---
+import { PROCESS } from '../data/site';
+interface Props { heading?: string }
+const { heading = 'How we work' } = Astro.props;
+---
+<section class="section" aria-labelledby="process-title">
+  <div class="section-head">
+    <p class="eyebrow">Our process</p>
+    <h2 id="process-title">{heading}</h2>
+    <p class="muted">The same six steps on every job, so you always know what happens next and what it costs.</p>
+  </div>
+  <ol class="steps">
+    {PROCESS.map((s) => (
+      <li><h3>{s.title}</h3><p>{s.text}</p></li>
+    ))}
+  </ol>
+</section>

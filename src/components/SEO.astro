@@ -1,0 +1,53 @@
+---
+/**
+ * ALL <head> SEO tags come from here. Never hand-write title/meta tags in a page.
+ * Props:
+ *   title        unique page title, ~50–60 chars (brand is added automatically if missing)
+ *   description  unique meta description, ~140–160 chars
+ *   image        optional imported image for social sharing (defaults to /og-default.jpg)
+ *   noindex      true for pages that should not appear in Google
+ */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { SITE } from '../data/site';
+import { cleanPath } from '../lib/path';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+const { title, description, image, imageAlt = SITE.name, type = 'website', noindex = false } = Astro.props;
+
+const fullTitle = title.includes('Esquire') ? title : `${title} | ${SITE.shortName}`;
+// Canonical = this page on the canonical host, no trailing slash, no query string.
+const path = cleanPath(Astro.url.pathname);
+const canonical = new URL(path, SITE.url).href;
+
+let ogImage = new URL('/og-default.jpg', SITE.url).href;
+if (image) {
+  const img = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 80 });
+  ogImage = new URL(img.src, SITE.url).href;
+}
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content="en_KE" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={imageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />

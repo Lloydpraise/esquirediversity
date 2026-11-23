@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Todo from '../components/Todo.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title="Privacy Notice | Esquire Diversity" description="How Esquire Diversity LTD collects and uses the information you send through this website, in line with Kenya's Data Protection Act, 2019.">
+  <div class="container">
+    <article class="section prose">
+      <h1>Privacy notice</h1>
+      <Todo>Esquire to review this notice (and add a date) before launch.</Todo>
+      <p>This notice explains how {SITE.name} ("we") handles information you share through esquirediversity.co.ke, in line with Kenya's Data Protection Act, 2019.</p>
+      <h2>What we collect</h2>
+      <ul>
+        <li>What you enter in our quote form: name, phone number, location, the service you need, property type, budget range, timeline and any notes.</li>
+        <li>The page you sent the form from, the website that referred you and campaign tags (UTM parameters) in the link you followed.</li>
+        <li>Messages you send us on WhatsApp, by phone or by email.</li>
+        <li>Website usage data collected by cookies from Google Analytics / Google Tag Manager and the Meta Pixel, used to measure our advertising and improve the site.</li>
+      </ul>
+      <h2>How we use it</h2>
+      <p>Only to respond to your enquiry, arrange site visits, prepare quotes, deliver your project, and understand which of our marketing works. We do not sell your information.</p>
+      <h2>Where it is stored</h2>
+      <p>Form submissions are stored securely with our database provider, Supabase. Analytics data is processed by Google and Meta under their own privacy policies.</p>
+      <h2>Your rights</h2>
+      <p>You can ask to see, correct or delete the information we hold about you by emailing <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

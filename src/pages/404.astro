@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+---
+<BaseLayout title="Page not found" description="This page doesn't exist." noindex>
+  <div class="container section">
+    <h1>Sorry, we can't find that page</h1>
+    <p>Try our <a href="/services">services</a>, see our <a href="/projects">projects</a>, or get in touch.</p>
+    <ContactButtons />
+  </div>
+</BaseLayout>

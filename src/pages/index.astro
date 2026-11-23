@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import TrustSignals from '../components/TrustSignals.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Todo from '../components/Todo.astro';
+import { getServices } from '../lib/content';
+import { PHOTOS } from '../data/photos';
+import { CLAIMS } from '../data/site';
+import heroImg from '../assets/projects/gypsum-ceiling-led-lighting-tv-wall.jpeg';
+
+const services = await getServices();
+const featured = PHOTOS.filter((p) => p.status === 'completed');
+---
+<BaseLayout
+  title="Interior Design & Construction Company in Nairobi | Esquire Diversity"
+  description="Esquire Diversity designs and builds kitchens, ceilings, bathrooms, offices and new homes in Nairobi. See it in 3D, get an itemised quote, one team to handover."
+>
+  <div class="container">
+    {/*
+      HERO BLOCK. Kept self-contained so it can later be swapped for the
+      "See your space redesigned" AI visualizer without touching the rest of the page.
+    */}
+    <section class="hero">
+      <div class="hero-media">
+        <Image src={heroImg} alt="Living room with gypsum ceiling, LED downlights and TV wall by Esquire Diversity" widths={[640, 1024, 1600]} sizes="(min-width: 1200px) 1136px, 100vw" format="webp" quality={72} loading="eager" fetchpriority="high" />
+      </div>
+      <div class="hero-content">
+        <p class="eyebrow" style="color:#fff;">Esquire Diversity LTD · Mumias Road, Nairobi</p>
+        <h1>Interior design &amp; construction company in Nairobi</h1>
+        <p>Kitchens, ceilings, bathrooms, offices and new homes. See your space in 3D, get an itemised quote, and work with one team from design to handover.</p>
+        <ContactButtons waLabel="Chat on WhatsApp" />
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="services-title">
+      <div class="section-head">
+        <p class="eyebrow">What we do</p>
+        <h2 id="services-title">Our services</h2>
+      </div>
+      <div class="grid grid-3">{services.map((s) => <ServiceCard service={s} />)}</div>
+    </section>
+
+    <section class="section-tight" aria-labelledby="why-title">
+      <div class="section-head">
+        <p class="eyebrow">Why homeowners choose us</p>
+        <h2 id="why-title">Know the design and the cost before work starts</h2>
+      </div>
+      <TrustSignals />
+      <div class="stats" style="margin-top:2rem;">
+        {CLAIMS.map((c) => <div><strong>{c.value}</strong><span class="muted">{c.label}</span></div>)}
+      </div>
+      <Todo>confirm the "100+ customers" and "15+ years" claims (CLAIMS in src/data/site.ts).</Todo>
+    </section>
+
+    <ProcessSteps />
+
+    <section class="section" aria-labelledby="work-title">
+      <div class="section-head">
+        <p class="eyebrow">Our work</p>
+        <h2 id="work-title">Recent projects</h2>
+        <p class="muted">Real photos from Esquire Diversity jobs.</p>
+      </div>
+      <PhotoGrid photos={featured} limit={6} />
+      <p style="margin-top:1.25rem;"><a class="btn btn-outline" href="/projects">See all projects</a></p>
+    </section>
+
+    {/* TODO(esquire): Google reviews section once the Business Profile has reviews. */}
+
+    <section class="section" id="quote">
+      <QuoteForm />
+    </section>
+  </div>
+</BaseLayout>

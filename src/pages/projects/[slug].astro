@@ -1,0 +1,64 @@
+---
+/** Case study page, one per (non-draft) file in src/content/projects/. */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ContactButtons from '../../components/ContactButtons.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import { getProjects, getServices } from '../../lib/content';
+import { breadcrumbNode } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const services = (await getServices()).filter((s) => d.services.includes(s.id));
+const path = `/projects/${project.id}`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' }, { name: d.title, path }];
+const facts = [
+  ['Location', d.location],
+  ['Size', d.area],
+  ['Scope', d.scope],
+  ['Year', d.year ? String(d.year) : ''],
+].filter(([, v]) => v);
+---
+<BaseLayout
+  title={`${d.title}${d.location ? ` in ${d.location}` : ''}`}
+  description={d.summary || `${d.title}: a project by Esquire Diversity in Nairobi.`}
+  image={d.cover}
+  imageAlt={d.coverAlt}
+  noindex={d.draft}
+  service={services[0]?.data.name.toLowerCase()}
+  schema={[breadcrumbNode(crumbs)]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight">
+      <h1>{d.title}</h1>
+      {d.summary && <p class="muted">{d.summary}</p>}
+      <Image src={d.cover} alt={d.coverAlt} widths={[640, 1024, 1600]} sizes="(min-width: 1200px) 1136px, 100vw" format="webp" loading="eager" style="border-radius: var(--radius-md); margin: 1rem 0;" />
+      {facts.length > 0 && (
+        <div class="table-wrap"><table><tbody>{facts.map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}</tbody></table></div>
+      )}
+    </section>
+    <section class="section-tight prose"><Content /></section>
+    {d.gallery.length > 0 && (
+      <section class="section-tight photo-grid">
+        {d.gallery.map((g) => (
+          <figure><Image src={g.src} alt={g.alt} widths={[400, 800]} sizes="(min-width: 960px) 380px, 100vw" format="webp" /></figure>
+        ))}
+      </section>
+    )}
+    <section class="section-tight">
+      <h2>Services in this project</h2>
+      <ul>{services.map((s) => <li><a href={`/${s.id}`}>{s.data.name}</a></li>)}</ul>
+      <ContactButtons service={services[0]?.data.name.toLowerCase()} extra={`I saw the "${d.title}" project.`} />
+    </section>
+    <section class="section"><QuoteForm service={services[0]?.id} /></section>
+  </div>
+</BaseLayout>

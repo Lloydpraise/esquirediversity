@@ -1,0 +1,21 @@
+---
+/**
+ * FAQ list. Entries marked `todo: true` (answer needs Esquire's facts) show only in dev.
+ * The FAQPage schema is built from the same list by the page, using `publicFaqs()`.
+ */
+import { publicFaqs, type FaqItem } from '../lib/schema';
+interface Props { faqs: FaqItem[]; title?: string }
+const { faqs, title = 'Frequently asked questions' } = Astro.props;
+const list = import.meta.env.DEV ? faqs : publicFaqs(faqs);
+---
+{list.length > 0 && (
+  <section class="section faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">{title}</h2>
+    {list.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.todo && <strong class="todo">TODO(esquire) draft answer: </strong>}{f.a}</p>
+      </details>
+    ))}
+  </section>
+)}

@@ -1,0 +1,71 @@
+---
+/**
+ * The shell every page uses: <head> (SEO + schema + analytics), header, footer,
+ * floating WhatsApp button and the mobile call/WhatsApp bar.
+ *
+ * Usage in a page:
+ *   <BaseLayout title="..." description="..." schema={[...]} service="kitchen cabinets">
+ *     ...page content...
+ *   </BaseLayout>
+ */
+import '../styles/global.css';
+import type { ImageMetadata } from 'astro';
+import SEO from '../components/SEO.astro';
+import Schema from '../components/Schema.astro';
+import Analytics from '../components/Analytics.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { waLink, telLink } from '../lib/whatsapp';
+import { cleanPath } from '../lib/path';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  schema?: (object | null | undefined)[];
+  service?: string; // default service for WhatsApp text + tracking on this page
+  noindex?: boolean;
+}
+const { title, description, image, imageAlt, schema = [], service, noindex } = Astro.props;
+const page = cleanPath(Astro.url.pathname);
+---
+<!doctype html>
+<html lang="en-KE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SEO title={title} description={description} image={image} imageAlt={imageAlt} noindex={noindex} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="theme-color" content="#1A1A1A" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <Schema nodes={schema} />
+    <Analytics />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body data-service={service}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <a class="wa-float" href={waLink({ service, page })} target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp" data-service={service}>
+      <Icon name="whatsapp" />
+    </a>
+    <div class="mobile-bar">
+      <a class="btn btn-call" href={telLink} data-service={service}><Icon name="phone" /> Call</a>
+      <a class="btn btn-whatsapp" href={waLink({ service, page })} target="_blank" rel="noopener" data-service={service}><Icon name="whatsapp" /> WhatsApp</a>
+    </div>
+
+    <script>
+      // Astro bundles this import into a small JS file for the browser.
+      import '../scripts/tracking';
+    </script>
+  </body>
+</html>

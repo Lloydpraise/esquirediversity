@@ -1,0 +1,64 @@
+---
+/** Portfolio hub. Replaces the old /gallery page (301 redirect in public/_redirects). */
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import ContactButtons from '../../components/ContactButtons.astro';
+import { getProjects } from '../../lib/content';
+import { PHOTOS } from '../../data/photos';
+import { breadcrumbNode } from '../../lib/schema';
+
+const projects = await getProjects();
+const completed = PHOTOS.filter((p) => p.status === 'completed');
+const inProgress = PHOTOS.filter((p) => p.status === 'in-progress');
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' }];
+---
+<BaseLayout
+  title="Our Projects: Kitchens, Ceilings & Builds in Nairobi | Esquire Diversity"
+  description="Photos of real Esquire Diversity projects in Nairobi: kitchen cabinets, wardrobes, gypsum ceilings, bathrooms and house construction, finished and in progress."
+  schema={[breadcrumbNode(crumbs)]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight">
+      <h1>Our projects</h1>
+      <p class="muted" style="max-width:680px;">Real photos from our jobs, finished and in progress. Like what you see? Tell us about your space.</p>
+      <ContactButtons waLabel="Ask about a project" />
+    </section>
+
+    {projects.length > 0 && (
+      <section class="section-tight" aria-labelledby="case-studies">
+        <h2 id="case-studies">Case studies</h2>
+        <div class="grid grid-3">
+          {projects.map((p) => (
+            <a class="card service-card" href={`/projects/${p.id}`}>
+              <Image src={p.data.cover} alt={p.data.coverAlt} widths={[400, 700]} sizes="(min-width: 960px) 360px, 100vw" format="webp" />
+              <div class="body">
+                <h3>{p.data.title}{p.data.draft && ' (draft)'}</h3>
+                <p class="muted">{[p.data.location, p.data.area].filter(Boolean).join(' · ')}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section-tight" aria-labelledby="completed">
+      <h2 id="completed">Completed work</h2>
+      <PhotoGrid photos={completed} />
+    </section>
+    <section class="section-tight" aria-labelledby="in-progress">
+      <h2 id="in-progress">Work in progress</h2>
+      <PhotoGrid photos={inProgress} />
+    </section>
+
+    <section class="section">
+      <div class="cta-band">
+        <h2>Like what you see?</h2>
+        <p>Get a free quote for your kitchen, ceiling, bathroom or full build.</p>
+        <div class="btn-row"><a class="btn btn-whatsapp" href="/get-quote">Get a free quote</a></div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

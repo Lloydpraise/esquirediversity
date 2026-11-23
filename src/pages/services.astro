@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import { getServices } from '../lib/content';
+import { breadcrumbNode } from '../lib/schema';
+import { SITE } from '../data/site';
+
+const services = await getServices();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }];
+const itemList = {
+  '@type': 'ItemList',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.data.name, url: `${SITE.url}/${s.id}` })),
+};
+---
+<BaseLayout
+  title="Interior Design & Construction Services in Nairobi | Esquire Diversity"
+  description="Interior design, kitchens and wardrobes, gypsum ceilings, flooring, bathrooms, office fit-outs, renovations and new houses in Nairobi, from one team."
+  schema={[breadcrumbNode(crumbs), itemList]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight">
+      <h1>Our services</h1>
+      <p class="muted" style="max-width:680px;">From a single gypsum ceiling to a new house, every job gets a site visit, a 3D design and an itemised quote before we start.</p>
+      <ContactButtons />
+    </section>
+    <section class="section-tight">
+      <div class="grid grid-3">{services.map((s) => <ServiceCard service={s} />)}</div>
+    </section>
+    <ProcessSteps />
+  </div>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+/**
+ * Outputs JSON-LD structured data. The business entity is always included;
+ * pass extra nodes (Service, BreadcrumbList, FAQPage...) via `nodes`.
+ * Usage: <Schema nodes={[serviceNode(...), breadcrumbNode(...)]} />
+ */
+import { businessNode, websiteNode } from '../lib/schema';
+interface Props { nodes?: (object | null | undefined)[] }
+const { nodes = [] } = Astro.props;
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [businessNode(), websiteNode(), ...nodes.filter(Boolean)],
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(graph)} />

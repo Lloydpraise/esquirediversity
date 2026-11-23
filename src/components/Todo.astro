@@ -1,0 +1,9 @@
+---
+/**
+ * A visible TODO(esquire) marker for missing business facts.
+ * It ONLY shows while running `npm run dev`. On the live site it renders nothing,
+ * so placeholders never reach customers. Search the code for "TODO(esquire)" to find them all.
+ */
+const show = import.meta.env.DEV;
+---
+{show && <div class="todo">TODO(esquire): <slot /></div>}

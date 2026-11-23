@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Todo from '../components/Todo.astro';
+import { breadcrumbNode, BUSINESS_ID } from '../lib/schema';
+import { SITE } from '../data/site';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }];
+const contactPage = { '@type': 'ContactPage', url: `${SITE.url}/contact`, about: { '@id': BUSINESS_ID } };
+---
+<BaseLayout
+  title="Contact Esquire Diversity | Mumias Road, Nairobi"
+  description="Call or WhatsApp Esquire Diversity on 0722 326329, email info@esquirediversity.co.ke, or visit us on Mumias Road, Nairobi."
+  schema={[breadcrumbNode(crumbs), contactPage]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight">
+      <h1>Contact us</h1>
+      <div class="grid grid-2">
+        <div class="card">
+          <h2 style="font-size:1.3rem;">Talk to us</h2>
+          <p><strong>Phone / WhatsApp:</strong> <a href={`tel:${SITE.phoneE164}`}>{SITE.phoneDisplay}</a></p>
+          <p><strong>Email:</strong> <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+          <p><strong>Office:</strong> <a href={SITE.mapsUrl} target="_blank" rel="noopener">{SITE.address.street}, {SITE.address.city}, {SITE.address.countryName}, {SITE.address.postalCode}</a></p>
+          <Todo>opening hours, and a Google Maps embed once the Business Profile is verified.</Todo>
+          <ContactButtons />
+        </div>
+        <QuoteForm id="quote-contact" heading="Request a site visit" />
+      </div>
+    </section>
+  </div>
+</BaseLayout>

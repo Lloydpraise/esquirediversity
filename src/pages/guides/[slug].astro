@@ -1,0 +1,45 @@
+---
+/** Cost guide page, one per (non-draft) file in src/content/guides/. */
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import ContactButtons from '../../components/ContactButtons.astro';
+import { getGuides, getServices } from '../../lib/content';
+import { breadcrumbNode, BUSINESS_ID } from '../../lib/schema';
+import { SITE } from '../../data/site';
+
+export async function getStaticPaths() {
+  const guides = await getGuides();
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const d = guide.data;
+const { Content } = await render(guide);
+const service = (await getServices()).find((s) => s.id === d.service);
+const path = `/guides/${guide.id}`;
+const crumbs = [{ name: 'Home', path: '/' }, ...(service ? [{ name: service.data.name, path: `/${service.id}` }] : []), { name: d.title, path }];
+const article = {
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  url: `${SITE.url}${path}`,
+  author: { '@id': BUSINESS_ID },
+  publisher: { '@id': BUSINESS_ID },
+  ...(d.updated ? { dateModified: d.updated.toISOString() } : {}),
+};
+---
+<BaseLayout title={d.title} description={d.description} noindex={d.draft} service={service?.data.name.toLowerCase()} schema={[breadcrumbNode(crumbs), article]}>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <article class="section-tight prose">
+      <h1>{d.title}</h1>
+      {d.updated && <p class="muted small">Updated {d.updated.toLocaleDateString('en-KE', { year: 'numeric', month: 'long' })}</p>}
+      <Content />
+    </article>
+    {service && <p><a href={`/${service.id}`}>See our {service.data.name.toLowerCase()} service →</a></p>}
+    <ContactButtons service={service?.data.name.toLowerCase()} />
+    <section class="section"><QuoteForm service={service?.id} /></section>
+  </div>
+</BaseLayout>

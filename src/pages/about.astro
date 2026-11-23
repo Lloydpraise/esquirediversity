@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import TrustSignals from '../components/TrustSignals.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import Todo from '../components/Todo.astro';
+import { breadcrumbNode, BUSINESS_ID } from '../lib/schema';
+import { SITE } from '../data/site';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }];
+const aboutPage = { '@type': 'AboutPage', url: `${SITE.url}/about`, about: { '@id': BUSINESS_ID } };
+// Values below are from the original website copy.
+const values = [
+  { title: 'End-to-end solutions', text: 'We manage every part of your construction and furnishing project, saving you time and resources.' },
+  { title: 'After-sales support', text: 'We stay available after handover to deal with any future needs or concerns.' },
+  { title: 'No variety restrictions', text: 'We work with any supplier that meets our quality standards, giving you a wide choice of materials and furniture.' },
+  { title: 'Quality materials', text: 'We work with trusted suppliers for good materials, workmanship and quality control.' },
+  { title: 'Bespoke finishes', text: 'We source custom-made pieces to match your vision and requirements.' },
+];
+---
+<BaseLayout
+  title="About Esquire Diversity | Interior Design & Construction, Nairobi"
+  description="Esquire Diversity LTD is an interior design and construction company on Mumias Road, Nairobi, taking projects from 3D design and itemised quote to handover."
+  schema={[breadcrumbNode(crumbs), aboutPage]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight prose">
+      <h1>About Esquire Diversity</h1>
+      <p>Esquire Diversity LTD is an interior design and construction company based on Mumias Road, Nairobi. We know how hard it can be to create a space that looks good, works well and is built to last.</p>
+      <p>Our aim is to make the building process simple: one team takes your project from the first consultation and 3D design, through an itemised quote and construction, to the final handover.</p>
+      <Todo>founding year, founder/lead names and photos, team size, NCA registration, and any memberships or awards (only real ones).</Todo>
+    </section>
+    <section class="section-tight">
+      <h2>What we stand for</h2>
+      <div class="grid grid-3">{values.map((v) => <div class="card"><h3>{v.title}</h3><p class="muted">{v.text}</p></div>)}</div>
+    </section>
+    <section class="section-tight"><TrustSignals /></section>
+    <ProcessSteps />
+    <ContactButtons />
+  </div>
+</BaseLayout>

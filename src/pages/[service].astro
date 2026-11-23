@@ -1,0 +1,159 @@
+---
+/**
+ * SERVICE PAGE TEMPLATE. One page is built for each file in src/content/services/.
+ * The file name is the URL (kitchen-cabinets-nairobi.md -> /kitchen-cabinets-nairobi).
+ * The [service] in this file's name is a "dynamic route" parameter.
+ * Sections follow the project guide: hero → included → prices → projects → process
+ * → reviews → FAQ → quote form → related links.
+ */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import TrustSignals from '../components/TrustSignals.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import Faq from '../components/Faq.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Todo from '../components/Todo.astro';
+import { getServices, getProjects, getGuides } from '../lib/content';
+import { photosFor } from '../data/photos';
+import { serviceNode, breadcrumbNode, faqNode } from '../lib/schema';
+
+// Tells Astro which pages to build: one per service file.
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((service) => ({ params: { service: service.id }, props: { service } }));
+}
+
+const { service } = Astro.props;
+const d = service.data;
+const path = `/${service.id}`;
+const { Content } = await render(service);
+
+const allServices = await getServices();
+const related = allServices.filter((s) => d.related.includes(s.id));
+const projects = (await getProjects()).filter((p) => p.data.services.includes(service.id));
+const photos = photosFor(service.id);
+const guide = d.guide ? (await getGuides()).find((g) => g.id === d.guide) : undefined;
+const serviceLabel = d.name.toLowerCase();
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services' },
+  { name: d.name, path },
+];
+---
+<BaseLayout
+  title={d.metaTitle}
+  description={d.metaDescription}
+  image={d.heroImage}
+  imageAlt={d.heroAlt}
+  service={serviceLabel}
+  schema={[serviceNode({ name: d.name, description: d.metaDescription, path }), breadcrumbNode(crumbs), faqNode(d.faqs)]}
+>
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+
+    {/* 1–2. H1, price cue, hero photo and contact buttons above the fold */}
+    <section class="hero">
+      {d.heroImage && (
+        <div class="hero-media">
+          <Image src={d.heroImage} alt={d.heroAlt} widths={[640, 1024, 1600]} sizes="(min-width: 1200px) 1136px, 100vw" format="webp" quality={72} loading="eager" fetchpriority="high" />
+        </div>
+      )}
+      <div class="hero-content">
+        <h1>{d.h1}</h1>
+        {d.priceCue ? <p class="price-cue">{d.priceCue}</p> : <Todo>price cue for {d.name}, e.g. "From KES X per m²" (priceCue in the .md file)</Todo>}
+        <p>{d.summary}</p>
+        <ContactButtons service={serviceLabel} waLabel="Get a quote on WhatsApp" />
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="prose"><Content /></div>
+    </section>
+
+    {/* 3. What's included */}
+    <section class="section-tight" aria-labelledby="included">
+      <h2 id="included">What's included</h2>
+      <div class="grid grid-3">
+        {d.included.map((item) => (
+          <div class="card"><h3>{item.title}</h3><p class="muted">{item.text}</p></div>
+        ))}
+      </div>
+    </section>
+
+    {/* 4. Prices and what moves them */}
+    <section class="section" aria-labelledby="prices">
+      <h2 id="prices">{d.name} prices in Nairobi</h2>
+      {d.prices.length > 0 ? (
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>Unit</th><th>Price (KES)</th></tr></thead>
+            <tbody>{d.prices.map((p) => <tr><td>{p.item}</td><td>{p.unit}</td><td>{p.price}</td></tr>)}</tbody>
+          </table>
+        </div>
+      ) : (
+        <>
+          <p>Every project is different, so we price from your measurements and chosen finishes. After a site visit you get an itemised quote (BoQ) showing the cost of each item.</p>
+          <Todo>price table rows for {d.name} (prices: in the .md file)</Todo>
+        </>
+      )}
+      {d.priceFactors.length > 0 && (
+        <>
+          <h3 style="margin-top:1.5rem;">What affects the price</h3>
+          <ul class="check-list">{d.priceFactors.map((f) => <li>{f}</li>)}</ul>
+        </>
+      )}
+    </section>
+
+    {/* 5. Real projects for this service */}
+    {(projects.length > 0 || photos.length > 0) && (
+      <section class="section-tight" aria-labelledby="work">
+        <h2 id="work">Our {serviceLabel} work</h2>
+        {projects.length > 0 && (
+          <div class="grid grid-3" style="margin-bottom:1.5rem;">
+            {projects.map((p) => (
+              <a class="card service-card" href={`/projects/${p.id}`}>
+                <Image src={p.data.cover} alt={p.data.coverAlt} widths={[400, 700]} sizes="(min-width: 960px) 360px, 100vw" format="webp" />
+                <div class="body">
+                  <h3>{p.data.title}</h3>
+                  <p class="muted">{[p.data.location, p.data.area].filter(Boolean).join(' · ')}</p>
+                  {p.data.scope && <p class="small">{p.data.scope}</p>}
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+        {photos.length > 0 && <PhotoGrid photos={photos} limit={6} />}
+        <Todo>area (estate), size and scope for each project photo; turn the best into case studies in src/content/projects/.</Todo>
+        <p style="margin-top:1rem;"><a href="/projects">See all our projects →</a></p>
+      </section>
+    )}
+
+    {/* 6. Process */}
+    <ProcessSteps />
+    <TrustSignals />
+
+    {/* 7. Reviews: TODO(esquire) add once there are Google reviews. Never write reviews ourselves. */}
+    <Todo>Google reviews for this service (add once the Google Business Profile has reviews).</Todo>
+
+    {/* 8. FAQ (FAQPage schema is built from the same list) */}
+    <Faq faqs={d.faqs} title={`${d.name}: common questions`} />
+
+    {/* 9. Quote form with this service pre-selected */}
+    <section class="section" id="quote">
+      <QuoteForm service={service.id} heading={`Get a ${serviceLabel} quote`} />
+    </section>
+
+    {/* 10. Related services and cost guide */}
+    <section class="section-tight" aria-labelledby="related">
+      <h2 id="related">Related services</h2>
+      {guide && <p><a href={`/guides/${guide.id}`}>Read our guide: {guide.data.title} →</a></p>}
+      <div class="grid grid-3">{related.map((s) => <ServiceCard service={s} />)}</div>
+    </section>
+  </div>
+</BaseLayout>

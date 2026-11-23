@@ -1,0 +1,30 @@
+---
+/**
+ * WhatsApp + Call buttons. Use these instead of writing links by hand:
+ * the WhatsApp message names the service and page, and the click tracking
+ * (whatsapp_click / phone_click) is picked up automatically by src/scripts/tracking.ts.
+ */
+import Icon from './Icon.astro';
+import { waLink, telLink } from '../lib/whatsapp';
+import { SITE } from '../data/site';
+import { cleanPath } from '../lib/path';
+
+interface Props {
+  service?: string; // e.g. "kitchen cabinets"
+  extra?: string;
+  waLabel?: string;
+  showCall?: boolean;
+}
+const { service, extra, waLabel = 'WhatsApp us', showCall = true } = Astro.props;
+const page = cleanPath(Astro.url.pathname);
+---
+<div class="btn-row">
+  <a class="btn btn-whatsapp" href={waLink({ service, page, extra })} target="_blank" rel="noopener" data-service={service}>
+    <Icon name="whatsapp" /> {waLabel}
+  </a>
+  {showCall && (
+    <a class="btn btn-call" href={telLink} data-service={service}>
+      <Icon name="phone" /> Call {SITE.phoneDisplay}
+    </a>
+  )}
+</div>

@@ -1,0 +1,32 @@
+---
+/**
+ * Trust signals buyers check before hiring a contractor: NCA registration,
+ * an itemised BoQ and a 3D design step. NCA only shows once SITE.ncaRegistration is filled in.
+ */
+import { SITE } from '../data/site';
+import Todo from './Todo.astro';
+---
+<div class="trust">
+  <div class="card card-sand">
+    <h3>Itemised quote (BoQ)</h3>
+    <p class="muted">Every quote is a Bill of Quantities listing each item and cost, so you can compare and adjust before you commit.</p>
+  </div>
+  <div class="card card-sand">
+    <h3>3D design first</h3>
+    <p class="muted">You see the finished space in 3D before work starts, so there are no surprises at handover.</p>
+  </div>
+  <div class="card card-sand">
+    {SITE.ncaRegistration ? (
+      <>
+        <h3>NCA registered</h3>
+        <p class="muted">Registered with the National Construction Authority: {SITE.ncaRegistration}.</p>
+      </>
+    ) : (
+      <>
+        <h3>One team, start to finish</h3>
+        <p class="muted">Design, build and after-sales support from one company, so there is one point of contact and one person accountable.</p>
+        <Todo>NCA registration number and category (src/data/site.ts → ncaRegistration). This card switches to "NCA registered" once filled in.</Todo>
+      </>
+    )}
+  </div>
+</div>

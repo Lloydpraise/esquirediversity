@@ -1,0 +1,22 @@
+---
+/**
+ * Grid of real project photos. Astro's <Image> converts them to WebP, sets width/height
+ * (prevents layout shift) and lazy-loads them by default.
+ */
+import { Image } from 'astro:assets';
+import type { Photo } from '../data/photos';
+interface Props { photos: Photo[]; limit?: number }
+const { photos, limit } = Astro.props;
+const list = limit ? photos.slice(0, limit) : photos;
+---
+<div class="photo-grid">
+  {list.map((p) => (
+    <figure>
+      <Image src={p.src} alt={p.alt} widths={[400, 800]} sizes="(min-width: 960px) 380px, (min-width: 640px) 50vw, 100vw" format="webp" quality={72} />
+      <figcaption>
+        {p.caption}
+        {p.status === 'in-progress' && <span class="tag">In progress</span>}
+      </figcaption>
+    </figure>
+  ))}
+</div>

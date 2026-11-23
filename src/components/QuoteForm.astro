@@ -1,0 +1,246 @@
+---
+/**
+ * Multi-step quote form: service → property → budget → timeline → contact.
+ * Saves to Supabase (esquire.leads) with a plain fetch, records page/referrer/UTMs,
+ * and pushes quote_start + generate_lead to dataLayer (plus Meta Pixel "Lead").
+ * If saving fails, the visitor gets a WhatsApp button with their answers pre-filled,
+ * so a lead is never lost.
+ *
+ * Props:
+ *   service  optional service slug to pre-select (service pages pass their own slug)
+ *   id       unique id if a page has more than one form
+ */
+import { getCollection } from 'astro:content';
+import { BUDGET_RANGES, TIMELINES, PROPERTY_TYPES } from '../data/site';
+import { waLink } from '../lib/whatsapp';
+
+interface Props { service?: string; id?: string; heading?: string }
+const { service, id = 'quote-form', heading = 'Get a free quote' } = Astro.props;
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const options = [...services.map((s) => ({ value: s.id, label: s.data.name })), { value: 'other', label: 'Something else' }];
+const preset = options.find((o) => o.value === service);
+---
+<form
+  class="quote"
+  id={id}
+  data-quote-form
+  data-wa-base={waLink({})}
+  novalidate
+>
+  <h2 style="font-size: 1.6rem;">{heading}</h2>
+  <p class="muted small">Five quick questions. We reply on WhatsApp or by phone.</p>
+  <p class="progress" aria-live="polite"><span data-step-label>Step 1 of 5</span></p>
+  <div class="bar" aria-hidden="true"><span data-bar></span></div>
+
+  <fieldset data-step="1" class={preset ? '' : 'active'}>
+    <legend>What do you need?</legend>
+    <div class="options">
+      {options.map((o) => (
+        <label class="option"><input type="radio" name="service" value={o.label} data-slug={o.value} checked={preset?.value === o.value} required /><span>{o.label}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset data-step="2" class={preset ? 'active' : ''}>
+    <legend>What type of property?</legend>
+    <div class="options">
+      {PROPERTY_TYPES.map((p) => (
+        <label class="option"><input type="radio" name="property_type" value={p} required /><span>{p}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset data-step="3">
+    <legend>Roughly what budget do you have in mind?</legend>
+    <div class="options">
+      {BUDGET_RANGES.map((b) => (
+        <label class="option"><input type="radio" name="budget_range" value={b} required /><span>{b}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset data-step="4">
+    <legend>When would you like to start?</legend>
+    <div class="options">
+      {TIMELINES.map((t) => (
+        <label class="option"><input type="radio" name="timeline" value={t} required /><span>{t}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset data-step="5">
+    <legend>Where should we send your quote?</legend>
+    <div class="field">
+      <label for={`${id}-name`}>Your name</label>
+      <input id={`${id}-name`} name="name" autocomplete="name" required maxlength="120" />
+    </div>
+    <div class="field">
+      <label for={`${id}-phone`}>Phone / WhatsApp number</label>
+      <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="07xx xxx xxx" required minlength="9" maxlength="30" />
+    </div>
+    <div class="field">
+      <label for={`${id}-area`}>Site location (estate or area)</label>
+      <input id={`${id}-area`} name="site_location" placeholder="e.g. Kilimani, Nairobi" maxlength="120" />
+    </div>
+    <div class="field">
+      <label for={`${id}-notes`}>Anything else? (optional)</label>
+      <textarea id={`${id}-notes`} name="notes" rows="3" maxlength="2000" placeholder="Room size, what you'd like changed..."></textarea>
+    </div>
+    <p class="small muted">Have photos or a plan? After you send this, tap the WhatsApp button to share them.</p>
+    <p class="small muted">By sending, you agree to our <a href="/privacy">privacy notice</a>.</p>
+  </fieldset>
+
+  <div class="form-nav">
+    <button type="button" class="btn btn-outline" data-back hidden>Back</button>
+    <button type="button" class="btn btn-dark" data-next>Next</button>
+    <button type="submit" class="btn btn-whatsapp" data-submit hidden>Send my request</button>
+  </div>
+  <div class="form-msg" data-msg role="status" hidden></div>
+
+  <noscript>
+    <p class="form-msg err">This form needs JavaScript. Please WhatsApp or call us instead.</p>
+  </noscript>
+</form>
+
+<script>
+  import { track, getAttribution } from '../scripts/tracking';
+
+  const SB_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SB_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const SB_SCHEMA = import.meta.env.PUBLIC_SUPABASE_SCHEMA || 'esquire';
+  const SB_TABLE = import.meta.env.PUBLIC_SUPABASE_LEADS_TABLE || 'leads';
+
+  async function saveLead(row: Record<string, string>) {
+    if (!SB_URL || !SB_KEY) throw new Error('Supabase env vars are not set');
+    const res = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`, {
+      method: 'POST',
+      headers: {
+        apikey: SB_KEY,
+        Authorization: `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': SB_SCHEMA, // which schema to write to
+        Prefer: 'return=minimal', // the browser is not allowed to read rows back
+      },
+      body: JSON.stringify(row),
+    });
+    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    const steps = [...form.querySelectorAll<HTMLFieldSetElement>('[data-step]')];
+    const back = form.querySelector<HTMLButtonElement>('[data-back]')!;
+    const next = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector('[data-step-label]')!;
+    const bar = form.querySelector<HTMLElement>('[data-bar]')!;
+    const msg = form.querySelector<HTMLElement>('[data-msg]')!;
+    let current = steps.findIndex((s) => s.classList.contains('active'));
+    const firstStep = current; // 0, or 1 when the service is pre-selected
+    let started = false;
+
+    // On /get-quote?service=kitchen-cabinets-nairobi, pre-select that service.
+    const qs = new URLSearchParams(location.search).get('service');
+    if (qs && firstStep === 0) {
+      const radio = form.querySelector<HTMLInputElement>(`input[data-slug="${CSS.escape(qs)}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    const selectedService = () => (form.querySelector<HTMLInputElement>('input[name="service"]:checked')?.value || '');
+
+    function show(i: number) {
+      steps.forEach((s, n) => s.classList.toggle('active', n === i));
+      current = i;
+      label.textContent = `Step ${i + 1} of ${steps.length}`;
+      bar.style.width = `${((i + 1) / steps.length) * 100}%`;
+      back.hidden = i === firstStep;
+      next.hidden = i === steps.length - 1;
+      submit.hidden = i !== steps.length - 1;
+    }
+
+    function stepValid(i: number) {
+      const inputs = [...steps[i].querySelectorAll<HTMLInputElement>('input, textarea')];
+      for (const input of inputs) {
+        if (!input.checkValidity()) { input.reportValidity(); return false; }
+      }
+      return true;
+    }
+
+    function markStarted() {
+      if (started) return;
+      started = true;
+      track('quote_start', { service: selectedService() });
+    }
+
+    form.addEventListener('change', markStarted);
+    // Auto-advance when an option is picked (choice steps only).
+    form.addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.type === 'radio' && current < steps.length - 1) setTimeout(() => show(current + 1), 150);
+    });
+    next.addEventListener('click', () => { if (stepValid(current)) { markStarted(); show(current + 1); } });
+    back.addEventListener('click', () => show(Math.max(firstStep, current - 1)));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      for (let i = firstStep; i < steps.length; i++) {
+        if (!stepValid(i)) { show(i); stepValid(i); return; }
+      }
+      const fd = new FormData(form);
+      const get = (k: string) => String(fd.get(k) || '').trim();
+      const attr = getAttribution();
+      const row = {
+        name: get('name'),
+        phone: get('phone'),
+        service: get('service'),
+        property_type: get('property_type'),
+        budget_range: get('budget_range'),
+        timeline: get('timeline'),
+        site_location: get('site_location'),
+        notes: get('notes'),
+        page_path: location.pathname,
+        referrer: attr.referrer || '',
+        utm_source: attr.utm_source || '',
+        utm_medium: attr.utm_medium || '',
+        utm_campaign: attr.utm_campaign || '',
+        utm_term: attr.utm_term || '',
+        utm_content: attr.utm_content || '',
+      };
+
+      // WhatsApp message with the same answers (used for photos, or as fallback).
+      const waText = `Hello Esquire Diversity! I'm ${row.name}. I'd like a quote for ${row.service || 'a project'}` +
+        `${row.site_location ? ` in ${row.site_location}` : ''}. Property: ${row.property_type}. Budget: ${row.budget_range}. Timeline: ${row.timeline}.`;
+      const waHref = form.dataset.waBase!.split('?')[0] + '?text=' + encodeURIComponent(waText);
+
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+      try {
+        await saveLead(row);
+        track('generate_lead', { service: row.service, budget_range: row.budget_range, property_type: row.property_type });
+        (window as any).fbq?.('track', 'Lead', { content_name: row.service });
+        msg.className = 'form-msg ok';
+        msg.innerHTML = `<strong>Thank you, ${escapeHtml(row.name)}. We've received your request.</strong> ` +
+          `We'll contact you on ${escapeHtml(row.phone)}. Want to send photos or a plan now? ` +
+          `<a class="btn btn-whatsapp" style="margin-top:.75rem" href="${waHref}" target="_blank" rel="noopener" data-service="${escapeHtml(row.service)}">Send photos on WhatsApp</a>`;
+        steps.forEach((s) => s.classList.remove('active'));
+        form.querySelector<HTMLElement>('.form-nav')!.hidden = true;
+        label.textContent = 'Done';
+        bar.style.width = '100%';
+      } catch (err) {
+        console.error(err);
+        msg.className = 'form-msg err';
+        msg.innerHTML = `Sorry, we couldn't send that. Please send it on WhatsApp instead, your answers are already filled in. ` +
+          `<a class="btn btn-whatsapp" style="margin-top:.75rem" href="${waHref}" target="_blank" rel="noopener" data-service="${escapeHtml(row.service)}">Send on WhatsApp</a>`;
+        submit.disabled = false;
+        submit.textContent = 'Send my request';
+      }
+      msg.hidden = false;
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    show(current);
+  });
+
+  function escapeHtml(s: string) {
+    return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  }
+</script>

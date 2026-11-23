@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import { breadcrumbNode } from '../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Get a quote', path: '/get-quote' }];
+---
+<BaseLayout
+  title="Get a Free Quote | Esquire Diversity, Nairobi"
+  description="Tell us about your kitchen, ceiling, bathroom, office or building project in Nairobi. Five quick questions, and we'll get back to you with next steps."
+  schema={[breadcrumbNode(crumbs)]}
+>
+  <div class="container" style="max-width: 820px;">
+    <Breadcrumbs items={crumbs} />
+    <section class="section-tight">
+      <h1>Get a free quote</h1>
+      <p class="muted">Answer five quick questions and we'll get back to you to arrange a site visit. Prefer to talk? WhatsApp or call us.</p>
+      <ContactButtons />
+    </section>
+    <QuoteForm id="quote-main" heading="Tell us about your project" />
+  </div>
+</BaseLayout>
